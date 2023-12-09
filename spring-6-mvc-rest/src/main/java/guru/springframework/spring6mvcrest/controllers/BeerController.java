@@ -49,4 +49,10 @@ public class BeerController {
 
     }
 
+    @DeleteMapping("{beerId}")
+    public ResponseEntity<HttpStatus> deleteBeerById(@PathVariable("beerId") UUID beerId){
+        this.beerService.deleteBeerById(beerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
