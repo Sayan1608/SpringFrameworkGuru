@@ -51,4 +51,9 @@ public class CustomerController {
         this.customerService.deleteCustomerById(customerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PatchMapping("{customerId}")
+    public ResponseEntity<Customer> patchCustomerById(@PathVariable("customerId") UUID customerId,@RequestBody Customer customer){
+        Customer patchedCustomer = this.customerService.patchCustomerById(customerId,customer);
+        return new ResponseEntity<>(patchedCustomer,HttpStatus.OK);
+    }
 }
