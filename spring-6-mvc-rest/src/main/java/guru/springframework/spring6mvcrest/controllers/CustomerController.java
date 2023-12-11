@@ -32,6 +32,7 @@ public class CustomerController {
     public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer){
         Customer savedCustomer = this.customerService.saveCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Location","/api/v1/customer");
 
         return new ResponseEntity<>(savedCustomer,headers, HttpStatus.CREATED);
     }
