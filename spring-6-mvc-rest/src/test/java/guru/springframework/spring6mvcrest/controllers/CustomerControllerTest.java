@@ -2,6 +2,7 @@ package guru.springframework.spring6mvcrest.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.spring6mvcrest.model.Beer;
 import guru.springframework.spring6mvcrest.model.Customer;
 import guru.springframework.spring6mvcrest.services.CustomerService;
 import guru.springframework.spring6mvcrest.services.CustomerServiceImpl;
@@ -12,9 +13,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -71,5 +75,22 @@ class CustomerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testUpdateCustomerById() throws Exception {
+        Customer customer = customerServiceImpl.listCustomers().get(0);
+
+        given(customerService.updateCustomerById(any(UUID.class), any(Customer.class))).willReturn(customer);
+
+        mockMvc.perform(put("/api/v1/customer/" + customer.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(customer)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().exists("Location"));
+
+        verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
     }
 }
