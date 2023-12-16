@@ -1,6 +1,5 @@
 package guru.springframework.spring6mvcrest.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6mvcrest.model.Beer;
 import guru.springframework.spring6mvcrest.services.BeerService;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@SpringBootTest
 @WebMvcTest(BeerController.class)
 class BeerControllerTest {
-
-    public static final String BEER_PATH = "/api/v1/beer";
-
 
     @Autowired
     MockMvc mockMvc;
@@ -61,7 +56,7 @@ class BeerControllerTest {
     void testListBeer() throws Exception {
         given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
 
-        mockMvc.perform(get(BEER_PATH)
+        mockMvc.perform(get(BeerController.BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +71,7 @@ class BeerControllerTest {
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
 
-        mockMvc.perform(get(BEER_PATH + "/" + testBeer.getId())
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +88,7 @@ class BeerControllerTest {
 
         given(beerService.saveBeer(any(Beer.class))).willReturn(beerServiceImpl.listBeers().get(1));
 
-        mockMvc.perform(post(BEER_PATH)
+        mockMvc.perform(post(BeerController.BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -109,7 +104,7 @@ class BeerControllerTest {
 
         given(beerService.updateBeerById(any(UUID.class),any(Beer.class))).willReturn(beerServiceImpl.listBeers().get(0));
 
-        mockMvc.perform(put(BEER_PATH + "/" + beer.getId())
+        mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -126,7 +121,7 @@ class BeerControllerTest {
     void testDeleteBeerById() throws Exception {
         Beer beer = beerServiceImpl.listBeers().get(0);
 
-        mockMvc.perform(delete(BEER_PATH + "/" +  beer.getId())
+        mockMvc.perform(delete(BeerController.BEER_PATH_ID,  beer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -147,7 +142,7 @@ class BeerControllerTest {
 
         given(beerService.patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture())).willReturn(beer);
 
-        mockMvc.perform(patch(BEER_PATH + "/" +  beer.getId())
+        mockMvc.perform(patch(BeerController.BEER_PATH_ID,  beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap)))
