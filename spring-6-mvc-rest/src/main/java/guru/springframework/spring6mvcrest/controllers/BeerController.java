@@ -15,22 +15,24 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/beer")
+//@RequestMapping("/api/v1/beer")
 public class BeerController {
+    public static final String BEER_PATH = "/api/v1/beer";
+    public static final String BEER_PATH_ID = BEER_PATH + "/{beerId}";
     private final BeerService beerService;
 
-    @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
+    @GetMapping(BEER_PATH_ID)
     public Beer getBeerById(@PathVariable("beerId") UUID beerId){
         log.debug("Get Beer By Id in Controller.Id : 12345 asdfsssd " );
         return this.beerService.getBeerById(beerId);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(BEER_PATH)
     public List<Beer> listBeers(){
         return this.beerService.listBeers();
     }
 
-    @PostMapping
+    @PostMapping(BEER_PATH)
     public ResponseEntity<Beer> saveBeer(@RequestBody Beer beer){
         Beer savedBeer = this.beerService.saveBeer(beer);
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +40,7 @@ public class BeerController {
         return new ResponseEntity<>(savedBeer,headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("{beerId}")
+    @PutMapping(BEER_PATH_ID)
     public ResponseEntity<Beer> updateBeerById(@PathVariable UUID beerId, @RequestBody Beer beer){
         Beer updateBeer = this.beerService.updateBeerById(beerId, beer);
         HttpHeaders headers = new HttpHeaders();
@@ -48,13 +50,13 @@ public class BeerController {
 
     }
 
-    @DeleteMapping("{beerId}")
+    @DeleteMapping(BEER_PATH_ID)
     public ResponseEntity<HttpStatus> deleteBeerById(@PathVariable("beerId") UUID beerId){
         this.beerService.deleteBeerById(beerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("{beerId}")
+    @PatchMapping(BEER_PATH_ID)
     public ResponseEntity<Beer> patchBeerById(@PathVariable UUID beerId, @RequestBody Beer beer){
         Beer patchedBeer = this.beerService.patchBeerById(beerId, beer);
         return new ResponseEntity<>(patchedBeer,HttpStatus.OK);
