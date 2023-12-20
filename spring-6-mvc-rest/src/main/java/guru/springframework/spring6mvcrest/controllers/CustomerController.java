@@ -1,6 +1,6 @@
 package guru.springframework.spring6mvcrest.controllers;
 
-import guru.springframework.spring6mvcrest.model.Customer;
+import guru.springframework.spring6mvcrest.model.CustomerDTO;
 import guru.springframework.spring6mvcrest.services.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,18 +21,18 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping(CUSTOMER_PATH)
-    public List<Customer> listCustomers(){
+    public List<CustomerDTO> listCustomers(){
         return this.customerService.listCustomers();
     }
 
     @GetMapping(CUSTOMER_PATH_ID)
-    public Customer getCustomerById(@PathVariable("customerId") UUID customerId){
+    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID customerId){
         return this.customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(CUSTOMER_PATH)
-    public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer){
-        Customer savedCustomer = this.customerService.saveCustomer(customer);
+    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customer){
+        CustomerDTO savedCustomer = this.customerService.saveCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location","/api/v1/customer");
 
@@ -40,8 +40,8 @@ public class CustomerController {
     }
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Customer> updateCustomerById(@PathVariable("customerId") UUID customerId,@RequestBody Customer customer){
-        Customer updatedCustomer = this.customerService.updateCustomerById(customerId, customer);
+    public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer){
+        CustomerDTO updatedCustomer = this.customerService.updateCustomerById(customerId, customer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "api/v1/customer" + updatedCustomer.getId());
 
@@ -55,8 +55,8 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Customer> patchCustomerById(@PathVariable("customerId") UUID customerId,@RequestBody Customer customer){
-        Customer patchedCustomer = this.customerService.patchCustomerById(customerId,customer);
+    public ResponseEntity<CustomerDTO> patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer){
+        CustomerDTO patchedCustomer = this.customerService.patchCustomerById(customerId,customer);
         return new ResponseEntity<>(patchedCustomer,HttpStatus.OK);
     }
 }

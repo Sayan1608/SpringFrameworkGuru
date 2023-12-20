@@ -1,6 +1,6 @@
 package guru.springframework.spring6mvcrest.services;
 
-import guru.springframework.spring6mvcrest.model.Beer;
+import guru.springframework.spring6mvcrest.model.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,15 +8,15 @@ import java.util.UUID;
 
 public interface BeerService {
 
-    Optional<Beer> getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-    List<Beer> listBeers();
+    List<BeerDTO> listBeers();
 
-    Beer saveBeer(Beer beer);
+    BeerDTO saveBeer(BeerDTO beer);
 
-    Beer updateBeerById(UUID beerId, Beer beer);
+    BeerDTO updateBeerById(UUID beerId, BeerDTO beer);
 
     void deleteBeerById(UUID ud);
 
-    Beer patchBeerById(UUID id, Beer beer);
+    BeerDTO patchBeerById(UUID id, BeerDTO beer);
 }
